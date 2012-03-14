@@ -1,9 +1,9 @@
 # File Navigator plugin for Sublime Text 2
 
 This plugin lets You quickly navigate through your project and perform basic file operations
-just using your keyboard (something that many of as missed moving from VIM).
+just using your keyboard (something that many of us missed when moving from VIM).
 
-Thins you can do with this plugin are:
+Things you can do with this plugin are:
 
 - create new files and directories
 - copy/move existing files
@@ -11,7 +11,7 @@ Thins you can do with this plugin are:
 - delete existing files
 
 All of the operaions above are done using the excellent sublime quick panel window.
-This means you get all the usuall benifits of that including fuzzy name matching.
+This means you get all the usual benifits of that including fuzzy name matching.
 
 I would like to point out, that this is my first sublime plugin and my first encounter
 with python, so please treat this as a very alpha version.
@@ -27,7 +27,7 @@ This method will allow you to keep the plugin up to date with the latest changes
 
 You can also just clone the repo to your packages directory if for some reason you do not wish to use package control:
 
-    git clone http://github.com/belike81/SublimeFileNavigator
+    git clone git://github.com/belike81/Sublime-File-Navigator.git
 
 ## How to use it
 
@@ -97,5 +97,5 @@ All of SublimeFileNavigator is licensed under the MIT licence.
   THE SOFTWARE.
 
 ## Code base
-When developing this plugin I used some code from the excelent [Sublime Quick File Creator](https://github.com/noklesta/SublimeQuickFileCreator)
+When developing this plugin I used some code from the excellent [Sublime Quick File Creator](https://github.com/noklesta/SublimeQuickFileCreator)
 plugin.
