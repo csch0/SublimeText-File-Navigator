@@ -2,8 +2,17 @@ import sublime, sublime_plugin
 
 import datetime, os.path, shutil
 
-from Default.send2trash import send2trash
-from .Tools import FileNavigator, list_items, show_input_panel, show_quick_panel
+try:
+	from Default.send2trash import send2trash
+	from .Tools import FileNavigator, list_items, show_input_panel, show_quick_panel
+except:
+	from Tools import FileNavigator, list_items, show_input_panel, show_quick_panel
+
+	import sys
+	package_dir = sublime.packages_path() + os.sep + "Default"
+	if package_dir not in sys.path:
+		sys.path += [package_dir]
+	from send2trash import send2trash
 
 class FileNavigatorListener(sublime_plugin.EventListener):
 
@@ -65,7 +74,9 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 				self.file_navigator.set("block_do_directory", False)
 				self.navigator(roots[i])
 
-		if len(items) == 1:
+		if not items:
+			sublime.status_message("No Root Elements")
+		elif len(items) == 1:
 			on_done(0)
 		else:			
 			show_quick_panel(self.window, items, on_done)
@@ -328,7 +339,8 @@ class FileNavigatorToggelHiddenFilesCommand(sublime_plugin.WindowCommand):
 		self.window.run_command("hide_overlay")
 
 		# Set show_hidden_files for the next run
-		FileNavigator().set("show_hidden_files", not hidden_files )
+		FileNavigator().set("show_hidden_files", not show_hidden_files )
+		sublime.status_message("Hide system/hidden files" if show_hidden_files else "Show all available files")
 		self.window.run_command("file_navigator", {"path": cwd})		
 
 class FileNavigatorDoDirectory(sublime_plugin.WindowCommand):

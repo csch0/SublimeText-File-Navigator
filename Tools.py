@@ -2,6 +2,9 @@ import sublime, sublime_plugin
 
 import os, fnmatch
 
+if sublime.platform() == "window":
+	import ctypes
+
 class FileNavigator(object):
 
 	__shared = {}
@@ -27,7 +30,6 @@ def list_items(path, dirs_only = False):
 	file_exclude_patterns = s.get("file_exclude_patterns", [])
 	folder_exclude_patterns = s.get("folder_exclude_patterns", [])
 	show_hidden_files = FileNavigator().get("show_hidden_files", s.get("show_hidden_files", False))
-	print(show_hidden_files)
 	# 
 	items = []
 	for item in os.listdir(path):
