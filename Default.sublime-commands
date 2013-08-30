@@ -1,0 +1,10 @@
+[
+    {
+        "caption": "File Navigator: Open",
+        "command": "file_navigator"
+    },
+    {
+        "caption": "File Navigator: Reset History",
+        "command": "file_navigator_reset_history"
+    }
+]

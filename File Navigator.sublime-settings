@@ -1,0 +1,9 @@
+{
+  // Patterns of files/folders to exclude
+  "file_exclude_patterns": [ ".DS_Store" ],
+  "folder_exclude_patterns": [ "tmp", ".git", ".svn" ],
+  
+  // By default, files hidden by the system are hidden in as well (files that 
+	// start with "." in Linux\Unix and files with the hidden attribute on windows)
+  "show_hidden_files": false
+}

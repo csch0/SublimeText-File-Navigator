@@ -1,0 +1,16 @@
+[
+  { 
+  	"keys": ["super+shift+o"], 
+  	"command": "file_navigator" 
+  },
+	{ 
+		"keys": ["tab"], 
+		"command": "file_navigator_do_directory",
+		"context": [{"key": "file_navigator_do_directory"}]
+	},
+	{ 
+		"keys": ["super+."], 
+		"command": "file_navigator_toggel_hidden_files",
+		"context": [{"key": "file_navigator_toggel_hidden_files"}]
+	}
+]
