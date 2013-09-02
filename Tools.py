@@ -2,7 +2,7 @@ import sublime, sublime_plugin
 
 import os, fnmatch
 
-if sublime.platform() == "window":
+if sublime.platform() == "windows":
 	import ctypes
 
 class FileNavigator(object):
@@ -50,7 +50,7 @@ def list_items(path, dirs_only = False):
 					continue
 
 		if os.path.isdir(item_path):
-			items += [{"name":item + os.sep, "desciption": "Open Directory", "path": item_path, "is_dir": True}]
+			items += [{"name":item + "/", "desciption": "Open Directory", "path": item_path, "is_dir": True}]
 		else:
 			items += [{"name":item, "desciption": "Rename/Delete/Copy/Move File", "path": item_path, "is_dir": False}]
 	
