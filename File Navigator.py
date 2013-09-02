@@ -104,7 +104,9 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 		'''
 		items = [{"name": ".."}]
 		if self.item_buffer:
-			items += [{"name": "Paste here"}]
+			items += [{"name": "Paste"}]
+		if len(self.item_buffer) == 1:
+			items += [{"name": "Paste As ..."}]
 		items += list_items(path, len(self.item_buffer) > 0)
 
 		# Set current working directory
@@ -119,6 +121,8 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 			# Paste item if item buffer
 			elif i == 1 and self.item_buffer:
 				self.do_paste(path);
+			elif i == 2 and len(self.item_buffer) == 1:
+				self.do_paste_as(path);
 			# Restart navigator if the selected item is a dir, or file action on selecting a file
 			elif items[i]["is_dir"]:
 				self.navigator(items[i]["path"])
@@ -297,8 +301,19 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 
 		roots += [item["path"] for item in items]
 
-		self.item_buffer = [{"path": path, "type": "copy"}]
+		self.item_buffer = [{"file_path": path, "file_name": os.path.basename(path), "type": "copy"}]
 		self.choose_root(list(set(roots)))
+
+	def do_paste_as(self, path):
+
+		# Save source name
+		source_name = self.item_buffer[0]["file_name"]
+
+		def on_done(target_name):
+			self.item_buffer[0]["file_name"] = target_name
+			self.do_paste(path)
+
+		show_input_panel(self.window, "Paste As:", source_name, on_done)
 
 	def do_paste(self, path):
 
@@ -319,7 +334,6 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 		if not os.path.isdir(dir_path):
 			os.makedirs(dir_path)
 
-
 		with open(os.path.join(dir_path, "History.json"), "w", encoding = "utf-8") as f:
 			f.write(sublime.encode_value(items))
 
@@ -328,10 +342,10 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 				if item["type"] == "move":
 					shutil.move(item["path"], path)
 				elif item["type"] == "copy":
-					if os.path.isdir(item["path"]):
+					if os.path.isdir(item["file_path"]):
 						shutil.copytree(item["path"], os.path.join(path, os.path.basename(item["path"])))
 					else:
-						shutil.copy(item["path"], path)
+						shutil.copy(item["file_path"], os.path.join(path, item["file_name"]))
 			except Exception as e:
 				print(e)
 
