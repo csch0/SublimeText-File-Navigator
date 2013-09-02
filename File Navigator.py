@@ -177,6 +177,9 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 
 	def do_new_file(self, path):
 
+		# Reset file_navigator
+		self.file_navigator.reset()
+
 		def on_done(file_name):
 			file_path = os.path.join(path, file_name)
 			if os.path.exists(file_path):
@@ -189,6 +192,9 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 		show_input_panel(self.window, "New file name:", '', on_done)
 
 	def do_new_directory(self, path):
+
+		# Reset file_navigator
+		self.file_navigator.reset()
 
 		def on_done(dir_name):
 			# Reset file_navigator
@@ -234,12 +240,16 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 		show_quick_panel(self.window, items, on_done)
 
 	def do_open(self, path):
+
 		# Reset file_navigator
 		self.file_navigator.reset()
 
 		self.window.open_file(path)
 
 	def do_rename(self, path):
+
+		# Reset file_navigator
+		self.file_navigator.reset()
 
 		# Save source name
 		source_name = os.path.basename(path)
