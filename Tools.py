@@ -81,7 +81,6 @@ def history_items():
 			# Check for cache_timeout
 			today = datetime.datetime.today()
 			items = [item for item in sublime.decode_value(f.read()) if ((today - datetime.datetime.strptime(item["rtime"], "%d.%m.%YT%H:%M:%S")).total_seconds() < cache_timeout * 3600)]
-			print(items)
 
 	except Exception as e:
 		items = []

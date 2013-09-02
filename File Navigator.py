@@ -270,7 +270,7 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 		# add history_items
 		roots += [item["path"] for item in history_items()]
 
-		self.item_buffer = [{"path": path, "type": "move"}]
+		self.item_buffer = [{"file_path": path, "file_name": os.path.basename(path), "type": "move"}]
 		self.choose_root(list(set(roots)))
 
 	def do_copy(self, path):
@@ -317,14 +317,14 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 		for item in self.item_buffer:
 			try:
 				if item["type"] == "move":
-					shutil.move(item["path"], path)
+					shutil.move(item["file_path"], os.path.join(path, item["file_name"]))
 				elif item["type"] == "copy":
 					if os.path.isdir(item["file_path"]):
-						shutil.copytree(item["path"], os.path.join(path, os.path.basename(item["path"])))
+						shutil.copytree(item["file_path"], os.path.join(path, item["file_name"]))
 					else:
 						shutil.copy(item["file_path"], os.path.join(path, item["file_name"]))
 			except Exception as e:
-				print(e)
+				pass
 
 		sublime.status_message("%d paste in %s" % (len(self.item_buffer), path))
 
