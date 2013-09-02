@@ -4,9 +4,9 @@ import datetime, os.path, shutil
 
 try:
 	from Default.send2trash import send2trash
-	from .Tools import FileNavigator, list_items, show_input_panel, show_quick_panel
+	from .Tools import FileNavigator, history_items, list_items, show_input_panel, show_quick_panel
 except:
-	from Tools import FileNavigator, list_items, show_input_panel, show_quick_panel
+	from Tools import FileNavigator, history_items, list_items, show_input_panel, show_quick_panel
 
 	import sys
 	package_dir = sublime.packages_path() + os.sep + "Default"
@@ -66,6 +66,7 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 		# Find command prefix
 		prefix = os.path.commonprefix(roots).rpartition(os.sep)[0]
 		items =  [[item[len(prefix)+1:], os.path.dirname(item)] for item in roots]
+		# items =  [[os.path.basename(item), os.path.dirname(item)] for item in roots]
 
 		def on_done(i):
 			if i < 0:
@@ -99,9 +100,7 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 		return items
 
 	def navigator(self, path):
-		'''
-		Navigate through directories on your computer
-		'''
+
 		items = [{"name": ".."}]
 		if self.item_buffer:
 			items += [{"name": "Paste here"}]
@@ -173,9 +172,7 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 		show_quick_panel(self.window, items, on_done)
 
 	def do_new_file(self, path):
-		'''
-		Create a new file
-		'''
+
 		def on_done(file_name):
 			file_path = os.path.join(path, file_name)
 			if os.path.exists(file_path):
@@ -188,9 +185,7 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 		show_input_panel(self.window, "New file name:", '', on_done)
 
 	def do_new_directory(self, path):
-		'''
-		Create a new directory
-		'''
+
 		def on_done(dir_name):
 			# Reset file_navigator
 			self.file_navigator.reset()
@@ -203,7 +198,6 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 		show_input_panel(self.window, "New directory name:", '', on_done)
 
 	def do_file(self, path):
-		print("do", path)
 
 		def on_done(i):
 			if i < 0:
@@ -242,9 +236,7 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 		self.window.open_file(path)
 
 	def do_rename(self, path):
-		'''
-		Rename the selected file, or directory
-		'''
+
 		# Save source name
 		source_name = os.path.basename(path)
 
@@ -256,9 +248,7 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 		show_input_panel(self.window, "Rename:", source_name, on_done)
 
 	def do_delete(self, path):
-		'''
-		Delete the selected file, or directory
-		'''
+
 		# Reset file_navigator
 		self.file_navigator.reset()
 
@@ -273,14 +263,8 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 	def do_move(self, path):
 		roots = self.find_root()
 
-		# Get history items
-		try:
-			with open(os.path.join(sublime.cache_path(), "FileNavigator", "History.json"), "r", encoding = "utf-8") as f:
-				items = sublime.decode_value(f.read())
-		except Exception as e:
-			items = []
-
-		roots += [item["path"] for item in items]
+		# add history_items
+		roots += [item["path"] for item in history_items()]
 
 		self.item_buffer = [{"path": path, "type": "move"}]
 		self.choose_root(list(set(roots)))
@@ -288,14 +272,8 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 	def do_copy(self, path):
 		roots = self.find_root()
 
-		# Get history items
-		try:
-			with open(os.path.join(sublime.cache_path(), "FileNavigator", "History.json"), "r", encoding = "utf-8") as f:
-				items = sublime.decode_value(f.read())
-		except Exception as e:
-			items = []
-
-		roots += [item["path"] for item in items]
+		# add history_items
+		roots += [item["path"] for item in history_items()]
 
 		self.item_buffer = [{"path": path, "type": "copy"}]
 		self.choose_root(list(set(roots)))
@@ -305,17 +283,16 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 		# Reset file_navigator
 		self.file_navigator.reset()
 
-		# Get history items
-		try:
-			with open(os.path.join(sublime.cache_path(), "FileNavigator", "History.json"), "r", encoding = "utf-8") as f:
-				items = sublime.decode_value(f.read())
-		except Exception as e:
-			items = []
+		# Load settings
+		s = sublime.load_settings("File Navigator.sublime-settings")
+		cache_timeout = s.get("cache_timeout", 24)
 
+		# add history_items
+		items = history_items()
 		items += [{"path": path, "rtime": datetime.datetime.today().strftime("%d.%m.%YT%H:%M:%S")}]
 
 		# Add history items
-		dir_path = os.path.join(sublime.cache_path(), "FileNavigator")
+		dir_path = os.path.join(sublime.cache_path(), "File Navigator")
 		if not os.path.isdir(dir_path):
 			os.makedirs(dir_path)
 
@@ -337,6 +314,7 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 
 		sublime.status_message("%d paste in %s" % (len(self.item_buffer), path))
 
+
 class FileNavigatorToggelHiddenFilesCommand(sublime_plugin.WindowCommand):
 
 	def run(self):
@@ -352,6 +330,7 @@ class FileNavigatorToggelHiddenFilesCommand(sublime_plugin.WindowCommand):
 		sublime.status_message("Hide system/hidden files" if show_hidden_files else "Show all available files")
 		self.window.run_command("file_navigator", {"path": cwd})
 
+
 class FileNavigatorDoDirectory(sublime_plugin.WindowCommand):
 
 	def run(self):
@@ -361,6 +340,7 @@ class FileNavigatorDoDirectory(sublime_plugin.WindowCommand):
 		# Hide overlay, this will reset FileNavigator()
 		self.window.run_command("hide_overlay")
 		self.window.run_command("file_navigator", {"do_dir": True, "path": cwd})
+
 
 class FileNavigatorResetHistory(sublime_plugin.WindowCommand):
 
