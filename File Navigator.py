@@ -360,7 +360,7 @@ class FileNavigatorResetHistory(sublime_plugin.WindowCommand):
 
 	def is_enabled(self):
 		try:
-			return os.path.isfile(os.path.join(os.path.join(sublime.cache_path(), "FileNavigator", "History.json")))
+			return os.path.isfile(os.path.join(os.path.join(sublime.cache_path(), "File Navigator", "History.json")))
 		except Exception as e:
 			return False
 
