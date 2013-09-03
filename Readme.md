@@ -15,6 +15,16 @@ All of the operations above are done using the excellent sublime quick panel win
 
 Coming soon!
 
+## Screenshots
+
+![Navigator](https://raw.github.com/wiki/Chris---/SublimeText-File-Navigator/navigator.jpg)
+
+![Navigator - File Actions](https://raw.github.com/wiki/Chris---/SublimeText-File-Navigator/file.jpg)
+
+![Navigator - Directory Actions](https://raw.github.com/wiki/Chris---/SublimeText-File-Navigator/directory.jpg)
+
+![Navigator - Paste](https://raw.github.com/wiki/Chris---/SublimeText-File-Navigator/paste.jpg)
+
 ## Installation
 
 ### Using Package Control:
