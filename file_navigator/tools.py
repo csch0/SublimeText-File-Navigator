@@ -68,20 +68,12 @@ def show_quick_panel(window, items, on_done, selected_index = -1):
 
 
 def history_items():
-	try:
-		# Load settings
-		s = sublime.load_settings("File Navigator.sublime-settings")
-		cache_timeout = s.get("cache_timeout", 24)
+	# Load settings
+	s = sublime.load_settings("File Navigator.sublime-settings")
+	cache_timeout = s.get("cache_timeout", 24)
 
-		# open History.join
-		with open(os.path.join(sublime.cache_path(), "File Navigator", "History.json"), "r", encoding = "utf-8") as f:
-			items = []
+	s = sublime.load_settings("File Navigator.history")
 
-			# Check for cache_timeout
-			today = datetime.datetime.today()
-			items = [item for item in sublime.decode_value(f.read()) if ((today - datetime.datetime.strptime(item["rtime"], "%d.%m.%YT%H:%M:%S")).total_seconds() < cache_timeout * 3600)]
-
-	except Exception as e:
-		items = []
-
-	return items
+	# Check for cache_timeout
+	today = datetime.datetime.today()
+	return [item for item in s.get("items", []) if ((today - datetime.datetime.strptime(item["rtime"], "%d.%m.%YT%H:%M:%S")).total_seconds() < cache_timeout * 3600)]

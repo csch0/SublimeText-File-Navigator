@@ -4,9 +4,9 @@ import datetime, os.path, shutil
 
 try:
 	from Default.send2trash import send2trash
-	from .Tools import FileNavigator, history_items, list_items, show_input_panel, show_quick_panel
-except:
-	from Tools import FileNavigator, history_items, list_items, show_input_panel, show_quick_panel
+	from .file_navigator.tools import FileNavigator, history_items, list_items, show_input_panel, show_quick_panel
+except (ImportError, ValueError):
+	from file_navigator.tools import FileNavigator, history_items, list_items, show_input_panel, show_quick_panel
 
 	import sys
 	package_dir = sublime.packages_path() + os.sep + "Default"
@@ -320,13 +320,17 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 		items = history_items()
 		items += [{"path": path, "rtime": datetime.datetime.today().strftime("%d.%m.%YT%H:%M:%S")}]
 
-		# Add history items
-		dir_path = os.path.join(sublime.cache_path(), "File Navigator")
-		if not os.path.isdir(dir_path):
-			os.makedirs(dir_path)
+		s = sublime.load_settings("File Navigator.history")
+		s.set("items", items)
+		sublime.save_settings("File Navigator.history")
 
-		with open(os.path.join(dir_path, "History.json"), "w", encoding = "utf-8") as f:
-			f.write(sublime.encode_value(items))
+		# Add history items
+		# dir_path = os.path.join(sublime.cache_path(), "File Navigator")
+		# if not os.path.isdir(dir_path):
+		# 	os.makedirs(dir_path)
+
+		# with open(os.path.join(dir_path, "History.json"), "w", encoding = "utf-8") as f:
+		# 	f.write(sublime.encode_value(items))
 
 		for item in self.item_buffer:
 			try:
