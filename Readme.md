@@ -13,7 +13,11 @@ All of the operations above are done using the excellent sublime quick panel win
 
 ## Usage
 
-Coming soon!
+* `super+shift+o` on OSX or `ctrl+shift+o` on Windows/Linux shows a quick panel with directories related to the current open files or window.
+
+* `tab` shows the directory actions for the current selected folder
+
+* `super+.` on OSX or `ctrl+.` on Windows/Linux hide/shows the hidden files temporary, just can adjust this in the settings.
 
 ## Screenshots
 
@@ -44,8 +48,7 @@ Coming soon!
 
 Support this project and [others by chris][gittip] via [gittip][] or [paypal][].
 
-[![Support via Gittip](https://rawgithub.com/chris---/Donation-Badges/master/gittip.jpeg)][gittip]
-[![Support via PayPal](https://rawgithub.com/chris---/Donation-Badges/master/paypal.jpeg)][paypal]
+[![Support via Gittip](https://rawgithub.com/chris---/Donation-Badges/master/gittip.jpeg)][gittip][![Support via PayPal](https://rawgithub.com/chris---/Donation-Badges/master/paypal.jpeg)][paypal]
 
 [gittip]: https://www.gittip.com/Chris---
 [paypal]: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZWZCJPFSZNXEW
