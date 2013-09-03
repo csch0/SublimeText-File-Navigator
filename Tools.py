@@ -8,7 +8,7 @@ if sublime.platform() == "windows":
 class FileNavigator(object):
 
 	__shared = {}
-	__settings = {}
+	settings = {}
 
 	def __new__(cls, *args, **kwargs):
 		inst = object.__new__(cls)
@@ -16,20 +16,19 @@ class FileNavigator(object):
 		return inst
 
 	def get(self, key, fallback = None):
-		return self.__settings[key] if key in self.__settings else fallback
+		return self.settings[key] if key in self.settings else fallback
 
 	def set(self, key, value):
-		self.__settings[key] = value
+		self.settings[key] = value
 
 	def reset(self):
-		self.__settings = {}
+		self.settings = {}
 
-
-def list_items(path, dirs_only = False):
+def list_items(path, dirs_only = False, show_hidden_files = False):
 	s = sublime.load_settings("File Navigator.sublime-settings")
 	file_exclude_patterns = s.get("file_exclude_patterns", [])
 	folder_exclude_patterns = s.get("folder_exclude_patterns", [])
-	show_hidden_files = FileNavigator().get("show_hidden_files", s.get("show_hidden_files", False))
+	show_hidden_files = show_hidden_files if show_hidden_files else s.get("show_hidden_files", False)
 	#
 	items = []
 	for item in os.listdir(path):

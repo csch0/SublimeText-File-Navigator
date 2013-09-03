@@ -106,7 +106,11 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 			items += [{"name": "Paste"}]
 		if len(self.item_buffer) == 1:
 			items += [{"name": "Paste As ..."}]
-		items += list_items(path, len(self.item_buffer) > 0)
+		items += list_items(path, len(self.item_buffer) > 0, self.file_navigator.get("show_hidden_files"))
+
+		# block_do_directory on paste
+		if self.item_buffer:
+			self.file_navigator.set("block_do_directory", True)
 
 		# Set current working directory
 		self.file_navigator.set("cwd", path)
@@ -146,20 +150,16 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 				self.file_navigator.set("block_do_directory", False)
 				self.navigator(path)
 			elif i == 1:
-				self.file_navigator.set("block_do_directory", False)
 				self.do_new_directory(path)
 			elif i == 2:
-				self.file_navigator.set("block_do_directory", False)
 				self.do_new_file(path)
 			elif i == 3:
-				self.file_navigator.set("block_do_directory", False)
 				self.do_rename(path)
 			elif i == 4:
 				self.do_copy(path)
 			elif i == 5:
 				self.do_move(path)
 			elif i == 6:
-				self.file_navigator.set("block_do_directory", False)
 				self.do_delete(path)
 
 		# Save dir_name
@@ -209,11 +209,15 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 
 	def do_file(self, path):
 
+		# Block file_navigator_do_directory
+		self.file_navigator.set("block_do_directory", True)
+
 		def on_done(i):
 			if i < 0:
 				self.file_navigator.reset()
 			# Go back to directory
 			elif i == 0:
+				self.file_navigator.set("block_do_directory", False)
 				self.navigator(os.path.dirname(path))
 			elif i == 1:
 				self.do_open(path)
