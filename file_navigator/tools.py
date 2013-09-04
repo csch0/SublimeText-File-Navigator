@@ -26,8 +26,8 @@ class FileNavigator(object):
 
 def list_items(path, dirs_only = False, show_hidden_files = False):
 	s = sublime.load_settings("File Navigator.sublime-settings")
-	file_exclude_patterns = s.get("file_exclude_patterns", [])
-	folder_exclude_patterns = s.get("folder_exclude_patterns", [])
+	exclude_patterns = s.get("exclude_patterns", [])
+	hidden_patterns = s.get("hidden_patterns", [])
 	show_hidden_files = show_hidden_files if show_hidden_files else s.get("show_hidden_files", False)
 	#
 	items = []
@@ -36,14 +36,14 @@ def list_items(path, dirs_only = False, show_hidden_files = False):
 		item_path = os.path.join(path, item)
 
 		# Check file_exclude_patterns and folder_exclude_patterns
-		if any([fnmatch.fnmatch(item.lower(), p.lower()) for p in file_exclude_patterns]):
-			continue
-
-		if any([fnmatch.fnmatch(item.lower(), p.lower()) for p in folder_exclude_patterns]):
+		if any([fnmatch.fnmatch(item.lower(), p.lower()) for p in exclude_patterns]):
 			continue
 
 		# Check hidden files
 		if not show_hidden_files:
+
+			if any([fnmatch.fnmatch(item.lower(), p.lower()) for p in hidden_patterns]):
+				continue
 
 			# Check for hidden attribute etc
 			if sublime.platform() in ["osx", "linux"] and item[0] == ".":

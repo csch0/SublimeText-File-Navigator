@@ -1,11 +1,13 @@
 {
-  // Patterns of files/folders to exclude
-  "file_exclude_patterns": [ ".DS_Store" ],
-  "folder_exclude_patterns": [ "tmp", ".git", ".svn" ],
+  // Patterns of files to exclude at all
+  "exclude_patterns": [ ".DS_Store" ],
 
   // By default, files hidden by the system are hidden in as well (files that
 	// start with "." in Linux\Unix and files with the hidden attribute on windows)
   "show_hidden_files": false,
+
+  // Patterns of files to consider it as hidden files
+  "hidden_patterns": [".git", ".gitignore", ".svn"],
 
   // By default File Navigator uses a cache to save the most recent used folders
   // after moving/copying a file. Here you can define a certain time for it (in hours)
