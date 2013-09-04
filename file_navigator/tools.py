@@ -39,12 +39,17 @@ def list_items(path, dirs_only = False, show_hidden_files = False):
 		if any([fnmatch.fnmatch(item.lower(), p.lower()) for p in file_exclude_patterns]):
 			continue
 
+		if any([fnmatch.fnmatch(item.lower(), p.lower()) for p in folder_exclude_patterns]):
+			continue
+
 		# Check hidden files
 		if not show_hidden_files:
+
+			# Check for hidden attribute etc
 			if sublime.platform() in ["osx", "linux"] and item[0] == ".":
 				continue
 			elif sublime.platform() == "windows":
-				attrs = ctypes.windll.kernel32.GetFileAttributesW(item)
+				attrs = ctypes.windll.kernel32.GetFileAttributesW(item_path)
 				if attrs != -1 and bool(attrs & 2):
 					continue
 
