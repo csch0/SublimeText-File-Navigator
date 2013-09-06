@@ -1,28 +1,9 @@
 import sublime, sublime_plugin
 
-import datetime, fnmatch, os
+import time, fnmatch, os
 
 if sublime.platform() == "windows":
 	import ctypes
-
-class FileNavigator(object):
-
-	__shared = {}
-	settings = {}
-
-	def __new__(cls, *args, **kwargs):
-		inst = object.__new__(cls)
-		inst.__dict__ = cls.__shared
-		return inst
-
-	def get(self, key, fallback = None):
-		return self.settings[key] if key in self.settings else fallback
-
-	def set(self, key, value):
-		self.settings[key] = value
-
-	def reset(self):
-		self.settings = {}
 
 def list_items(path, dirs_only = False, show_hidden_files = False):
 	s = sublime.load_settings("File Navigator.sublime-settings")
@@ -80,5 +61,12 @@ def history_items():
 	s = sublime.load_settings("File Navigator.history")
 
 	# Check for cache_timeout
-	today = datetime.datetime.today()
-	return [item for item in s.get("items", []) if ((today - datetime.datetime.strptime(item["rtime"], "%d.%m.%YT%H:%M:%S")).total_seconds() < cache_timeout * 3600)]
+	now = time.time()
+	items = []
+	for item in s.get("items", []):
+		try:
+			if now - int(item["rtime"]) < cache_timeout * 3600:
+				items += [item]
+		except Exception:
+			pass
+	return items
