@@ -291,7 +291,7 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 		self.cls.reset()
 
 		if sublime.platform() == "windows":
-			os.startfile(path)
+			subprocess.call(["explorer", path])
 		elif sublime.platform() == "osx":
 			subprocess.call(["open", path])
 		elif sublime.platform() == "linux":
